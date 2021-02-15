@@ -1,6 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
-import patientRouter from "./routes/PatientRoute";
+import articleRoute from "./routes/articleRouter";
 import * as globalErrorHandling from "./controllers/ErrorController"
 import AppError  from "./utils/appError"
 
@@ -11,7 +11,7 @@ app.use(bodyParser.urlencoded({extended:true}));
 
 app.get('/', (req,res)=>{res.status(200).send({
     status:200, 
-    message:'welcome to patiente registration',
+    message:'welcome to Article Creation',
 })
 })
 app.use((req, res, next) => {
@@ -20,7 +20,7 @@ next()
 })
 console.log(app.get('env'))
 
-app.use("/api/v3/patient",patientRouter)
+app.use("/api/v3/article",articleRoute)
 app.all('*', (req,res,next) => {
     // res.status(404).json({
     //     status: 'fail',
