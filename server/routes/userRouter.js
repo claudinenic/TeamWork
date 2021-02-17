@@ -1,17 +1,21 @@
-import express from "express";
+
+import express, { Router } from "express";
+import * as patientControl from "../controllers/PatientControllers";
 import * as userControl from "../controllers/UserController";
-import User from "../models/User";
+import * as AuthController from "../controllers/AuthController"
+import PatientInfos from "../models/Patient";
 
-const UserRouter = express.Router()
+const userRouter = express.Router()
+userRouter.post('/login', AuthController.login)
+userRouter.post('/signup', AuthController.signup)
 
-UserRouter.route("/")
-                   .post(userControl.createUser)
-                     .get(userControl.getAlluser)             
-
-UserRouter.route('/:id')
+userRouter.route("/")
                    
-                   .get(userControl.getUser)
-                   .patch(userControl.updateUser)
-                   .delete(userControl.deleteUser)
+                   .post(userControl.createUser)
+                   .get(userControl.getAlluser)  
 
-export default UserRouter;
+userRouter.route('/:id')
+                   .delete(userControl.deleteUser)
+                   .patch(userControl.updateUser)
+                   .get(userControl.getUser)
+export default userRouter;

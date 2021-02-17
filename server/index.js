@@ -20,11 +20,13 @@ app.get('/', (req,res)=>{res.status(200).send({
 })
 app.use((req, res, next) => {
 req.requestTime = new Date().toISOString();
+// console.log(req.headers)
 next()
 })
-console.log(app.get('env')
-app.use("/api/v3api/v3/User",UserRouter)
-app.use("/api/v3/article",articleRoute)
+// console.log(app.get('env')
+
+app.use('/api/v3/User',UserRouter)
+app.use('/api/v3/article',articleRoute)
 
 app.all('*', (req,res,next) => {
     // res.status(404).json({
@@ -35,7 +37,7 @@ app.all('*', (req,res,next) => {
     // const err = new Error( `Can't find ${req.originalUrl} on this server`)
     // err.status = 'fail'
     // err.statusCode= 404
-    console.error(stack)
+   
     next(new AppError(`Can't find ${req.originalUrl} on this server`, 404))
 })
 
