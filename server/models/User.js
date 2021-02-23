@@ -5,7 +5,7 @@ import bcrypt from 'bcryptjs'
 const UserSchema =new mongoose.Schema({
     firstName:{
         type: String,
-        required: [true,'Please enter first name']
+        required: [true,'Please enter fir st name']
     },
     lastName:{
         type: String,
@@ -57,7 +57,9 @@ const UserSchema =new mongoose.Schema({
             },
         message: 'password not match'
         }
-    }
+        
+    },
+    passwordChangedAt:Date
 
 }); 
 UserSchema.pre('save',async function(next){
@@ -70,9 +72,20 @@ UserSchema.pre('save',async function(next){
     this.passwordConfirm =undefined
     next()
 
-})
+}) 
 UserSchema.methods.correctPassword = async function(candidatePassword, userPassword){
     return await bcrypt.compare(candidatePassword,userPassword)
+}
+UserSchema.methods.changesPassordAfter = function(JWTTImestamp){
+    if(this.passwordChangedAt){
+        const changedTimestamp =parseInt(this.passwordChangedAt.getTime()/1000,
+        10
+        )
+        // console.log(changedTimestamp,"++++++++",JWTTImestamp,"hello")
+        return JWTTImestamp<changedTimestamp
+    }
+    return false
+
 }
 
 const User = mongoose.model('User', UserSchema)
