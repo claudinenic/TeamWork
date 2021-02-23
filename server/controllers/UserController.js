@@ -4,7 +4,7 @@ import catchAsync from "../utils/catchAsync"
 
 export const createUser = catchAsync(async (req,res,next)=>{
 
-    const newUser = await User.create(req.body);
+    const newUser = await User.create(req.body);//inpostman
     res.status(201).json({
         status:"success",
         newUser
@@ -26,9 +26,15 @@ export const createUser = catchAsync(async (req,res,next)=>{
 //Update controll function
 export const updateUser= catchAsync(async (req,res,next)=>{
     let user= {};
-   user.name=req.body.name;
+   user.firstName=req.body.firstName;
+   user.lastName=req.body.lastName;
+   user.phone=req.body.phone;
+   user.gender=req.body.gender;
+   user.department=req.body.department;
+   user.address=req.body.address;
    user.email=req.body.email;
-   user.username=req.body.username;
+   user.password=req.body.password;
+   user.passwordConfirm=req.body.passwordConfirm;
     let query = {_id:req.params.id}
  
     const updateUser = await User.updateOne(query, user)
