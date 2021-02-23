@@ -5,7 +5,7 @@ import * as authController from '../controllers/authController'
 const router = express.Router()
 router
 .route('/')
-.post(commentController.createComment)
+.post(authController.protect,commentController.createComment)
 .get(authController.protect,commentController.getAllComment);
 
 router
