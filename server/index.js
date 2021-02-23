@@ -1,9 +1,9 @@
 import express from "express";
 import bodyParser from "body-parser";
 
-import patientRouter from "./routes/PatientRoute";
-import UserRouter from "./routes/userRouter"
+import CommentRouter from "./routes/commentRoutes"
 import articleRoute from "./routes/articleRouter";
+import UserRouter from "./routes/userRouter"
 
 import * as globalErrorHandling from "./controllers/ErrorController"
 import AppError  from "./utils/appError"
@@ -15,7 +15,7 @@ app.use(bodyParser.urlencoded({extended:true}));
 
 app.get('/', (req,res)=>{res.status(200).send({
     status:200, 
-    message:'welcome to Article Creation',
+    message:'welcome to teamwork',
 })
 })
 app.use((req, res, next) => {
@@ -25,18 +25,12 @@ next()
 })
 // console.log(app.get('env')
 
+app.use('/api/v3/Comment',CommentRouter)
 app.use('/api/v3/User',UserRouter)
 app.use('/api/v3/article',articleRoute)
 
 app.all('*', (req,res,next) => {
-    // res.status(404).json({
-    //     status: 'fail',
-    //     message: `Can't find ${req.originalUrl} on this server`
 
-    // })
-    // const err = new Error( `Can't find ${req.originalUrl} on this server`)
-    // err.status = 'fail'
-    // err.statusCode= 404
    
     next(new AppError(`Can't find ${req.originalUrl} on this server`, 404))
 })

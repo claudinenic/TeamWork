@@ -26,7 +26,7 @@ export const createUser = catchAsync(async (req,res,next)=>{
 //Update controll function
 export const updateUser= catchAsync(async (req,res,next)=>{
     let user= {};
-   user.name=req.body.name;
+   user.firstName=req.body.firstName;
    user.email=req.body.email;
    user.username=req.body.username;
     let query = {_id:req.params.id}
