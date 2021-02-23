@@ -12,6 +12,7 @@ const signToken = id => {
 
 
 export const signup = catchAsync(async(req, res, next) =>{
+console.log(req.requestTime )
     const newUser =await User.create({
         firstName: req.body.firstName,
         lastName: req.body.lastName,
@@ -22,7 +23,8 @@ export const signup = catchAsync(async(req, res, next) =>{
         address: req.body.address,
         email: req.body.email,
         password: req.body.password,
-        passwordConfirm: req.body.passwordConfirm
+        passwordConfirm: req.body.passwordConfirm,
+        passwordChangedAt:req.requestTime 
     })
     const token = signToken(newUser._id)
     
@@ -67,16 +69,25 @@ export const protect = catchAsync(async (req, res, next)=> {
     // console.log(token)
     if(!token){ 
         return next(new AppError('You are not logged in! Please login to get access', 401))
-    }
-
-
+    } 
 
     // 2. verificatoin token
 
-   const decoded= await promisify(jwt.verify)(token, process.env.JWT_SECRET)
-console.log(decoded)
+   const decoded= await  promisify(jwt.verify)(token, process.env.JWT_SECRET)
+    console.log(decoded)
     // 3.check if user still exists
-    // 4.check if user changed password after the token was issued
+    const freshUser = await User.findById(decoded.id)
+    if(!freshUser){
+        return next(new AppError('The token belonging to this use does no long exist.', 401))
+    }
+    // 4.check if user changed password after  the token was issued
+    if(freshUser.changesPassordAfter(decoded.iat)){
+        return next(
+            new AppError('user recently changed password! Please login again.', 404)
+        )
+    }
+    //5Grant Access to protected route
+    req.user = freshUser
 
     next();
-})
+})                   

@@ -25,6 +25,7 @@ export const createUser = catchAsync(async (req,res,next)=>{
 
 //Update controll function
 export const updateUser= catchAsync(async (req,res,next)=>{
+
     let user= {}
    user.firstName=req.body.firstName
    user.lastName=req.body.lastName
