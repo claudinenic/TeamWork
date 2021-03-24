@@ -1,9 +1,19 @@
+import { now } from "mongoose";
 import article from "../models/Article";
 import catchAsync from "../utils/catchAsync"
+import Comment from '../models/Comment';
 
 export const createArticle = catchAsync(async (req,res,next)=>{
-
-    const newArticle = await article.create(req.body);
+    let articleInfo= {};
+    articleInfo.title=req.body.title;
+    articleInfo.article=req.body.article;
+    articleInfo.authorId=req.user.id;
+    articleInfo.createdAt=new Date().toISOString();
+    const name=req.user.firstName+" "+req.user.lastName
+    articleInfo.author=name;
+    
+  
+    const newArticle = await article.create(articleInfo);
     res.status(201).json({
         status:"success",
         newArticle
@@ -11,10 +21,14 @@ export const createArticle = catchAsync(async (req,res,next)=>{
         })
 
         export const getArticle = catchAsync(async(req,res,next)=>{
+            const comment = await Comment.find({articleId:req.params.id})
             const articleInfo = await article.findById(req.params.id)
                     res.status(200).json({
-                       status:"success",
-                       articleInfo
+                        status : 'success',
+                        data: {
+                            articleInfo ,
+                            comment
+                        }
                     
                 })
             })
@@ -23,8 +37,7 @@ export const createArticle = catchAsync(async (req,res,next)=>{
     export const updateArticle = catchAsync(async (req,res,next)=>{
         let articleInfo= {};
         articleInfo.title=req.body.title;
-        articleInfo.Body=req.body.Body;
-        articleInfo.author=req.body.author;
+        articleInfo.article=req.body.article;
         let query = {_id:req.params.id}
      
         const updateArticle = await article.updateOne(query, articleInfo)

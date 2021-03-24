@@ -1,6 +1,7 @@
 import validator from "validator"
 import mongoose from "mongoose"
 import bcrypt from 'bcryptjs'
+import crypto from 'crypto'
 
 const UserSchema =new mongoose.Schema({
     firstName:{
@@ -21,7 +22,8 @@ const UserSchema =new mongoose.Schema({
     },
     jobRole: {
         type: String,
-        required: [true,'Please enter job role']
+        enum:["user", "guide", "lead-guide", "developer", "admin"],
+        default:'user',
     },
     department: {
         type: String,
@@ -48,9 +50,10 @@ const UserSchema =new mongoose.Schema({
     },
     passwordConfirm: {
         type: String,
+        select:false,
         required: [true,'Re-type  password'],
         validate: {
-            //this work on create
+            //this work on create and save only not update
 
             validator: function(el){
                 return el === this.password
@@ -59,7 +62,14 @@ const UserSchema =new mongoose.Schema({
         }
         
     },
-    passwordChangedAt:Date
+    passwordChangedAt: Date,
+    passwordResetToken: String,
+    passwordResetExpires: Date,
+    active: {
+        type: Boolean,
+        default:true,
+        select: false
+    }
 
 }); 
 UserSchema.pre('save',async function(next){
@@ -73,20 +83,41 @@ UserSchema.pre('save',async function(next){
     next()
 
 }) 
+UserSchema.pre(/^find/, function(next){
+    // this point to current querry
+    // this.find({active:  true});
+    this.find({active:{$ne:false}});
+    next()
+})
+
 UserSchema.methods.correctPassword = async function(candidatePassword, userPassword){
+        console.log(candidatePassword, userPassword)
     return await bcrypt.compare(candidatePassword,userPassword)
+
 }
 UserSchema.methods.changesPassordAfter = function(JWTTImestamp){
     if(this.passwordChangedAt){
         const changedTimestamp =parseInt(this.passwordChangedAt.getTime()/1000,
         10
         )
-        // console.log(changedTimestamp,"++++++++",JWTTImestamp,"hello")
+        // console.log(   ,"++++++++",JWTTImestamp,"hello")
         return JWTTImestamp<changedTimestamp
     }
     return false
 
 }
+UserSchema.methods.createPasswordResetToken = function () {
+ const resetToken = crypto.randomBytes(32).toString('hex');
+ this.passwordResetToken = crypto
+ .createHash('sha256')
+ .update(resetToken)
+ .digest('hex')
+//  console.log((resetToken)," newwwww", this.passwordResetToken)
+ this.passwordResetExpires = Date.now()+10*60*1000
+ 
+ return resetToken
+} 
+
 
 const User = mongoose.model('User', UserSchema)
 export default User;
