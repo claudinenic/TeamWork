@@ -12,9 +12,11 @@ articleRoute.route("/")
                 
 
 articleRoute.route('/:id')
-                   .delete(authControl.protect, articleControl.deleteArticle)
+                   .delete(authControl.protect ,
+                    authControl.restrictTo('admin', 'developer'),
+                    articleControl.deleteArticle)
                    .patch(authControl.protect, articleControl.updateArticle)
-                   .get(authControl.protect, articleControl.getArticle)
+                   .get(authControl.protect,  articleControl.getArticle)
 
 
 export default articleRoute;
