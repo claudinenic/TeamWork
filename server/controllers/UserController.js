@@ -78,13 +78,13 @@ export const updateUser= catchAsync(async (req,res,next)=>{
    user.department=req.body.department;
    user.address=req.body.address;
    user.email=req.body.email;
-   user.password=req.body.password;
-   user.passwordConfirm=req.body.passwordConfirm;
+
     let query = {_id:req.params.id}
  
     const updateUser = await User.updateOne(query, user)
             res.status(200).json({
-                status:"Updated success",   
+                status:"Updated success",  
+                updateUser 
           })  
        })
   //Delete controll function
