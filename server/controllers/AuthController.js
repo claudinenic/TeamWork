@@ -83,6 +83,7 @@ export const protect = catchAsync(async (req, res, next)=> {
     // 3.check if user still exists
     const freshUser = await User.findById(decoded.id)
     if(!freshUser){
+    
         return next(new AppError('The token belonging to this use does no long exist.', 401))
     }
     // 4.check if user changed password after  the token was issued

@@ -5,7 +5,8 @@ import mongoose from "mongoose";
     const artSchema = new mongoose.Schema({
     title:{
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     article:{
         type: String,

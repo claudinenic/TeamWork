@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev-start": " nodemon --exec babel-node ./server/server.js",
-    "prod-start": "SET NODE_ENV=production & nodemon --exec babel-node ./server/server.js",
+    "prod-start": "SET NODE_ENV=production& nodemon --exec babel-node ./server/server.js",
     "start": " babel-node ./server/server.js"
   },
   "repository": {
