@@ -18,7 +18,8 @@ const UserSchema =new mongoose.Schema({
     },
     gender: {
         type: String,
-        required: [true,'Please enter gender']
+        required: [true,'Please enter gender'],
+        enum:["male", "female"]
     },
     jobRole: {
         type: String,
@@ -39,7 +40,7 @@ const UserSchema =new mongoose.Schema({
         required: [true,'Please enter email'],
         unique: true,
         lowercase:true,
-        validator: [validator.isEmail,"Please provide a valid email"]
+        validate: [validator.isEmail,"Please provide a valid email"]
     },
    
     password: {
@@ -91,7 +92,7 @@ UserSchema.pre(/^find/, function(next){
 })
 
 UserSchema.methods.correctPassword = async function(candidatePassword, userPassword){
-        console.log(candidatePassword, userPassword)
+        // console.log(candidatePassword, userPassword)
     return await bcrypt.compare(candidatePassword,userPassword)
 
 }

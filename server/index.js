@@ -45,9 +45,11 @@ app.get('/', (req,res)=>{res.status(200).send({
 app.use((req, res, next) => {
 req.requestTime = new Date().toISOString();
 // console.log(req.headers)
+// console.log(x)
 next()
 })
-// console.log(app.get('env')
+
+// Route
 app.use('/api/v1/comment',CommentRouter)
 app.use('/api/v1/user',UserRouter)
 app.use('/api/v1/article',articleRoute)
@@ -57,4 +59,5 @@ app.all('*', (req,res,next) => {
 })
 
 app.use(globalErrorHandling.globalErrorHandling)                                                                                                                                                                                                                                      
-export default app;
+// module.exports = app;
+export default app
