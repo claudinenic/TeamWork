@@ -34,7 +34,9 @@ $ npm run start
 ```
 
 
-### Contact me for More  +250785182823 or Email: izerefaifelix@gmail.com
-### Author
+### Contact: +250785182823 
+### Authors
 [IZERE Ange Felix](https://github.com/Angelus123)
+[Claudine NIYIGENA](https://github.com/claudinenic)
+[Deborah INGABIRE]
 
